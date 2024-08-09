@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       if (exisitngUserByEmail.isVerified) {
         return Response.json(
           {
-            sucess: false,
+            success: false,
             message: "User already exist with this email",
           },
           { status: 400 }
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     if (!emailResponse.success) {
       return Response.json(
         {
-          sucess: false,
+          success: false,
           message: emailResponse.message,
         },
         { status: 500 }
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     }
     return Response.json(
       {
-        sucess: true,
+        success: true,
         message: "User register successfully. Please verify your email",
       },
       { status: 201 }
