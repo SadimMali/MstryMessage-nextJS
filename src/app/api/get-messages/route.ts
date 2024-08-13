@@ -9,8 +9,8 @@ export async function GET(request: Request) {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
-  const user: User = session?.user as User;
-  if (!session || !session.user) {
+  const _user: User = session?.user as User;
+  if (!session || !_user) {
     return Response.json(
       {
         success: false,
@@ -20,15 +20,16 @@ export async function GET(request: Request) {
     );
   }
 
-  const userId = new mongoose.Types.ObjectId(user._id); //convert userId to mongoose user id
+  const userId = new mongoose.Types.ObjectId(_user._id); //convert userId to mongoose user id
   try {
     // aggregation pipeline
     const user = await UserModel.aggregate([
-      { $match: { id: userId } },
+      { $match: { _id: userId } },
       { $unwind: "$messages" }, //unwind to open up array of messages
       { $sort: { "messages.createdAt": -1 } }, //sort messages by createdAt
-      { $group: { _id: "$_id", nessages: { $push: "$messages" } } },
+      { $group: { _id: "$_id", messages: { $push: "$messages" } } },
     ]);
+
     if (!user || user.length === 0) {
       return Response.json(
         {
@@ -38,15 +39,16 @@ export async function GET(request: Request) {
         { status: 404 }
       );
     }
+    console.log(user);
     return Response.json(
       {
         success: true,
-        message: user[0].messages,
+        messages: user[0].messages,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error getting messages", error)
+    console.error("Error getting messages", error);
     return Response.json(
       {
         success: false,
