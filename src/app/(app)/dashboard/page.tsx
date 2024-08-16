@@ -121,7 +121,7 @@ const page = () => {
 
   //   const user: User = session?.user as User;
   const { username } = session?.user as User;
-  const baseUrl = `${window.location.protocol}//${window.location.hostname}`;
+  const baseUrl = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
   const profileUrl = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = () => {
@@ -178,7 +178,7 @@ const page = () => {
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.length > 0 ? (
-          messages.map((message, index) => (
+          messages.map((message) => (
             <MessageCard
               key={message._id}
               message={message}
